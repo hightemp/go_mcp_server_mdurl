@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"errors"
+	"flag"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -16,7 +18,15 @@ import (
 )
 
 func main() {
-	s := server.NewMCPServer(
+	var transport string
+	var host string
+	var port string
+	flag.StringVar(&transport, "t", "sse", "Transport type (stdio or sse)")
+	flag.StringVar(&host, "h", "0.0.0.0", "Host of sse server")
+	flag.StringVar(&port, "p", "8888", "Port of sse server")
+	flag.Parse()
+
+	mcpServer := server.NewMCPServer(
 		"go_mcp_server_mdurl",
 		"1.0.0",
 	)
@@ -29,7 +39,7 @@ func main() {
 		),
 	)
 
-	s.AddTool(tool, helloHandler)
+	mcpServer.AddTool(tool, helloHandler)
 
 	tool2 := mcp.NewTool("markdown_all_html_of_url",
 		mcp.WithDescription("Get markdowned content of all html from URL"),
@@ -39,13 +49,18 @@ func main() {
 		),
 	)
 
-	s.AddTool(tool2, helloHandler2)
+	mcpServer.AddTool(tool2, helloHandler2)
 
-	sse := server.NewSSEServer(s, server.WithBaseURL("http://localhost:8888"))
-
-	fmt.Println("Starting server on http://127.0.0.1:8888/sse")
-	if err := sse.Start(":8888"); err != nil {
-		fmt.Printf("Server error: %v\n", err)
+	if transport == "sse" {
+		sseServer := server.NewSSEServer(mcpServer, server.WithBaseURL(fmt.Sprintf("http://localhost:%s", port)))
+		log.Printf("SSE server listening on %s:%s URL: http://127.0.0.1:%s/sse", host, port, port)
+		if err := sseServer.Start(fmt.Sprintf("%s:%s", host, port)); err != nil {
+			log.Fatalf("Server error: %v", err)
+		}
+	} else {
+		if err := server.ServeStdio(mcpServer); err != nil {
+			log.Fatalf("Server error: %v", err)
+		}
 	}
 }
 
