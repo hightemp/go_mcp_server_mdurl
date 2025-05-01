@@ -2,11 +2,6 @@
 
 A simple MCP (Model Context Protocol) server that provides tools for converting web content to Markdown format.
 
-## Features
-
-- Extract article content from a URL and convert it to Markdown
-- Convert entire HTML page from a URL to Markdown
-
 Server url: `http://127.0.0.1:8888`
 
 ## Tools
