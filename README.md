@@ -1,4 +1,4 @@
-# MCP Server for Markdown URL Conversion
+# go_mcp_server_mdurl
 
 A simple MCP (Model Context Protocol) server that provides tools for converting web content to Markdown format.
 
