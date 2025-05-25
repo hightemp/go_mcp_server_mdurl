@@ -23,7 +23,7 @@ func main() {
 	var port string
 	flag.StringVar(&transport, "t", "sse", "Transport type (stdio or sse)")
 	flag.StringVar(&host, "h", "0.0.0.0", "Host of sse server")
-	flag.StringVar(&port, "p", "8888", "Port of sse server")
+	flag.StringVar(&port, "p", "8890", "Port of sse server")
 	flag.Parse()
 
 	mcpServer := server.NewMCPServer(
