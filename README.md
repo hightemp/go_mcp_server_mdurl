@@ -2,7 +2,7 @@
 
 A simple MCP (Model Context Protocol) server that provides tools for converting web content to Markdown format.
 
-Server url: `http://127.0.0.1:8888/sse`
+Server url: `http://localhost:8888/sse`
 
 ## Tools
 
